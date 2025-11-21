@@ -1,0 +1,10 @@
+metric_id,metric_label,unit,brand_value,franchisee_value,store_value
+overall_upsell_attempt_pct,Overall Upsell Attempt %,%,73.0,72.0,71.0
+overall_upsell_success_pct,Overall Upsell Success %,%,36.5,35.5,34.5
+greeting_upsell_attempt_pct,Greeting Upsell Attempts %,%,52.0,51.0,50.0
+greeting_upsell_success_pct,Greeting Upsell Success %,%,22.0,21.5,21.0
+cart_upsell_attempt_pct,Cart Upsell Attempts %,%,62.0,61.0,60.0
+cart_upsell_success_pct,Cart Upsell Success %,%,26.0,25.5,25.0
+upsize_attempt_pct,Upsize Attempts %,%,42.0,41.0,40.0
+upsize_success_pct,Upsize Success %,%,15.5,15.0,14.5
+

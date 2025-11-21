@@ -1,0 +1,10 @@
+metric_id,metric_label,unit,brand_value,franchisee_value,store_value
+policy_adherence_rate,Policy Adherence Rate,%,95.5,94.8,94.2
+brand_greeting_pct,Brand Greeting %,%,91.0,90.5,90.0
+engaged_without_wait_pct,Engaged w/o wait %,%,88.0,87.5,87.0
+personalization_pct,Personalization %,%,76.0,75.5,75.0
+mobile_checkin_pct,Mobile Check-In %,%,50.0,49.5,49.0
+loyalty_check_pct,Loyalty Check %,%,73.0,72.5,72.0
+cart_confirmation_pct,Cart Confirmation %,%,95.0,94.5,94.0
+price_confirmation_pct,Price Confirmation %,%,93.0,92.5,92.0
+

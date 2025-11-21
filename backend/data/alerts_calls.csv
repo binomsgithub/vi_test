@@ -1,0 +1,16 @@
+call_id,store_id,disrespectful_language,unfriendly_tone,repeated_mistakes,missed_allergy_disclosure,item_unavailability,discount_requested,coupon_mentioned,guest_complaint,price_objection,manager_summary,recording_url
+CALL001,ST001,No,Yes,No,No,No,Yes,No,No,No,"Staff showed slight impatience during rush hour",https://recordings.example.com/call001
+CALL002,ST002,Yes,No,No,No,Yes,No,No,Yes,No,"Disrespectful language used when addressing guest complaint",https://recordings.example.com/call002
+CALL003,ST003,No,No,Yes,Yes,No,No,Yes,No,No,"Repeated mistakes in order taking, missed allergy disclosure",https://recordings.example.com/call003
+CALL004,ST001,No,Yes,No,No,No,Yes,Yes,No,Yes,"Unfriendly tone when handling discount request",https://recordings.example.com/call004
+CALL005,ST005,No,No,No,No,Yes,No,No,No,No,"Item unavailability handled professionally",https://recordings.example.com/call005
+CALL006,ST002,Yes,Yes,No,No,No,No,No,Yes,No,"Multiple issues: disrespectful language and unfriendly tone",https://recordings.example.com/call006
+CALL007,ST004,No,No,Yes,No,No,Yes,No,No,Yes,"Repeated mistakes with pricing",https://recordings.example.com/call007
+CALL008,ST006,No,No,No,No,No,No,No,No,No,"Excellent service - ideal conversation",https://recordings.example.com/call008
+CALL009,ST003,No,Yes,Yes,No,Yes,No,No,No,No,"Unfriendly tone and repeated mistakes",https://recordings.example.com/call009
+CALL010,ST007,Yes,No,No,No,No,Yes,Yes,No,No,"Disrespectful language when handling discount",https://recordings.example.com/call010
+CALL011,ST001,No,No,No,Yes,No,No,No,No,No,"Missed allergy disclosure - needs training",https://recordings.example.com/call011
+CALL012,ST005,No,Yes,No,No,No,No,No,Yes,No,"Unfriendly tone during guest complaint",https://recordings.example.com/call012
+CALL013,ST002,No,No,Yes,No,Yes,Yes,No,No,Yes,"Multiple issues requiring coaching",https://recordings.example.com/call013
+CALL014,ST008,No,No,No,No,No,No,No,No,No,"Perfect service delivery",https://recordings.example.com/call014
+CALL015,ST004,Yes,Yes,Yes,No,No,No,No,Yes,No,"Critical issues - multiple violations",https://recordings.example.com/call015

@@ -1,0 +1,13 @@
+metric_id,metric_label,unit,brand_value,franchisee_value,store_value
+disrespectful_language,Disrespectful Language,,85,92,98
+unfriendly_tone,Unfriendly Tone,,120,135,150
+repeated_mistakes,Repeated Mistakes,,95,105,115
+missed_allergy_disclosure,Missed Allergy Disclosure,,45,52,58
+item_unavailability,Item Unavailability,,180,195,210
+discount_requested,Discount Requested,,220,235,250
+coupon_mentioned,Coupon Mentioned,,150,165,180
+guest_complaint,Guest Complaint,,110,125,140
+price_objection,Price Objection,,130,145,160
+ideal_conversations,Ideal Conversations,,1850,1720,1600
+training_clips,Training Clips,,205,227,248
+

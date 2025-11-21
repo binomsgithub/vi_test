@@ -1,0 +1,9 @@
+metric_id,metric_label,unit,brand_value,franchisee_value,store_value
+friendliness_score,Friendliness Score,,4.6,4.5,4.4
+guest_sentiment_score,Guest Sentiment Score,,4.5,4.4,4.3
+tone,Tone,,4.5,4.4,4.3
+responsiveness,Responsiveness,,4.6,4.5,4.4
+patience,Patience,,4.7,4.6,4.5
+engagement,Engagement,,4.5,4.4,4.3
+resolution,Resolution,,4.6,4.5,4.4
+

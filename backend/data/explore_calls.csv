@@ -1,0 +1,22 @@
+call_id,call_datetime,brand,owner,franchise_id,store_id,channel,engagement_mode,total_sessions,order_handle_time,average_check,policy_adherence_rate,upsell_attempt_rate,upsell_success_rate,friendliness_score,guest_sentiment_score,brand_greeting,engaged_without_wait,personalization,mobile_checkin,loyalty_check,cart_confirmation,price_confirmation,disrespectful_language,unfriendly_tone,repeated_mistakes,missed_allergy_disclosure,item_unavailability,discount_requested,coupon_mentioned,guest_complaint,price_objection,recording_url
+CALL001,2024-01-15 08:30:00,BrandA,Owner1,FR001,ST001,drivethru,voice,1,2.5,22.50,95.0,72.0,35.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,Yes,No,No,No,Yes,No,No,No,https://recordings.example.com/call001
+CALL002,2024-01-15 09:15:00,BrandA,Owner1,FR001,ST002,drivethru,voice,1,2.6,21.80,94.5,71.0,34.0,4.5,4.4,Yes,Yes,No,Yes,Yes,Yes,Yes,Yes,No,No,No,Yes,No,No,Yes,No,https://recordings.example.com/call002
+CALL003,2024-01-15 10:00:00,BrandB,Owner2,FR002,ST004,drivethru,voice,1,2.7,23.20,94.0,70.0,33.0,4.4,4.3,Yes,Yes,Yes,No,Yes,Yes,Yes,No,No,Yes,Yes,No,No,Yes,No,No,https://recordings.example.com/call003
+CALL004,2024-01-15 11:30:00,BrandA,Owner1,FR001,ST001,drivethru,voice,1,2.4,24.00,95.5,73.0,36.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,Yes,No,No,No,Yes,Yes,No,Yes,https://recordings.example.com/call004
+CALL005,2024-01-15 12:00:00,BrandC,Owner3,FR003,ST007,drivethru,voice,1,2.5,22.60,95.0,72.0,35.0,4.5,4.4,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,No,No,No,No,https://recordings.example.com/call005
+CALL006,2024-01-15 12:45:00,BrandA,Owner1,FR001,ST002,drivethru,voice,1,2.3,25.00,96.0,74.0,37.0,4.7,4.6,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,https://recordings.example.com/call006
+CALL007,2024-01-15 13:20:00,BrandB,Owner2,FR002,ST005,drivethru,voice,1,2.4,23.80,95.5,73.0,36.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,Yes,No,No,Yes,No,No,Yes,https://recordings.example.com/call007
+CALL008,2024-01-15 14:00:00,BrandA,Owner1,FR001,ST003,drivethru,voice,1,2.2,24.50,96.5,75.0,38.0,4.7,4.6,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call008
+CALL009,2024-01-15 15:30:00,BrandC,Owner3,FR003,ST008,drivethru,voice,1,2.5,22.00,95.0,72.0,35.0,4.6,4.5,Yes,Yes,No,Yes,Yes,Yes,Yes,No,Yes,Yes,No,Yes,No,No,No,No,https://recordings.example.com/call009
+CALL010,2024-01-15 16:15:00,BrandA,Owner1,FR001,ST001,drivethru,voice,1,2.6,21.50,94.5,71.0,34.0,4.5,4.4,Yes,Yes,Yes,No,Yes,Yes,Yes,Yes,No,No,No,No,Yes,Yes,No,No,https://recordings.example.com/call010
+CALL011,2024-01-15 17:00:00,BrandB,Owner2,FR002,ST004,drivethru,voice,1,2.4,23.00,95.5,73.0,36.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,Yes,No,No,No,No,No,https://recordings.example.com/call011
+CALL012,2024-01-15 17:45:00,BrandA,Owner1,FR001,ST002,drivethru,voice,1,2.3,24.20,96.0,74.0,37.0,4.7,4.6,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,Yes,No,No,No,No,No,Yes,No,https://recordings.example.com/call012
+CALL013,2024-01-15 18:30:00,BrandC,Owner3,FR003,ST007,drivethru,voice,1,2.5,22.80,95.0,72.0,35.0,4.5,4.4,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,Yes,No,Yes,Yes,No,No,Yes,https://recordings.example.com/call013
+CALL014,2024-01-15 19:00:00,BrandA,Owner1,FR001,ST003,drivethru,voice,1,2.2,25.50,96.5,75.0,38.0,4.7,4.6,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call014
+CALL015,2024-01-15 20:00:00,BrandB,Owner2,FR002,ST005,drivethru,voice,1,2.4,23.50,95.5,73.0,36.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call015
+CALL016,2024-01-15 08:00:00,BrandA,Owner1,FR001,ST001,drivethru,voice,1,2.5,20.00,95.0,72.0,35.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call016
+CALL017,2024-01-15 09:00:00,BrandB,Owner2,FR002,ST004,drivethru,voice,1,2.6,21.00,94.5,71.0,34.0,4.5,4.4,Yes,Yes,No,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call017
+CALL018,2024-01-15 10:30:00,BrandC,Owner3,FR003,ST008,drivethru,voice,1,2.4,22.50,95.0,72.0,35.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call018
+CALL019,2024-01-15 11:00:00,BrandA,Owner1,FR001,ST002,drivethru,voice,1,2.5,23.00,95.5,73.0,36.0,4.6,4.5,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call019
+CALL020,2024-01-15 12:30:00,BrandB,Owner2,FR002,ST005,drivethru,voice,1,2.3,24.50,96.0,74.0,37.0,4.7,4.6,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,No,No,No,No,https://recordings.example.com/call020
+

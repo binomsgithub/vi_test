@@ -1,0 +1,6 @@
+metric_id,metric_label,unit,brand_value,franchisee_value,store_value
+order_handle_time,Order Handle Time,mins,2.4,2.5,2.6
+policy_adherence_rate,Policy Adherence Rate,%,95.5,94.8,94.2
+upsell_attempt_rate,Upsell Attempt Rate,%,72.5,71.0,69.5
+friendliness_score,Friendliness Score,,4.6,4.5,4.4
+
