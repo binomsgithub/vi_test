@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run build:frontend && npm run postbuild:copy-frontend",
+    "build": "npm run build:backend && npm run build:frontend && npm run postbuild:copy-frontend",
+    "build:backend": "cd backend && npm install",
     "build:frontend": "cd frontend && npm install && npm run build",
     "postbuild:copy-frontend": "rm -rf backend/client-build && mkdir -p backend/client-build && cp -R frontend/dist/* backend/client-build/",
     "start": "cd backend && node server.js",
