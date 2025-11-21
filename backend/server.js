@@ -32,7 +32,7 @@ app.use(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 8, // 8 hours
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "lax" : "lax",
     },
   })
 );
@@ -48,18 +48,32 @@ function requireAuth(req, res, next) {
   if (req.session && req.session.user) {
     return next();
   }
+  // Log for debugging (remove in production if too verbose)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Auth check failed:', {
+      hasSession: !!req.session,
+      hasUser: !!(req.session && req.session.user),
+      path: req.path
+    });
+  }
   return res.status(401).json({ error: "Unauthorized" });
 }
 
 // Helper to read and parse CSV
 function readCSV(filename) {
-  const filePath = join(__dirname, 'data', filename);
-  const content = readFileSync(filePath, 'utf-8');
-  return parse(content, {
-    columns: true,
-    skip_empty_lines: true,
-    cast: true,
-  });
+  try {
+    const filePath = join(__dirname, 'data', filename);
+    const content = readFileSync(filePath, 'utf-8');
+    return parse(content, {
+      columns: true,
+      skip_empty_lines: true,
+      cast: true,
+    });
+  } catch (error) {
+    console.error(`Error reading CSV file ${filename}:`, error.message);
+    console.error(`Looking for file at: ${join(__dirname, 'data', filename)}`);
+    throw error;
+  }
 }
 
 // Helper to filter data based on global filters
