@@ -12,27 +12,52 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS configuration - only needed in development
-if (process.env.NODE_ENV !== 'production') {
-  app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  }));
-}
+// CORS configuration to allow credentials
+// In production (EC2), allow CloudFront origin; in dev, allow localhost
+const isProduction = process.env.NODE_ENV === 'production';
+const cloudFrontOrigin = process.env.CLOUDFRONT_ORIGIN;
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // In production, allow CloudFront origin if specified, otherwise allow all
+    if (isProduction) {
+      if (cloudFrontOrigin && origin === cloudFrontOrigin) {
+        return callback(null, true);
+      }
+      // If no CloudFront origin specified, allow all (less secure but works)
+      if (!cloudFrontOrigin) {
+        return callback(null, true);
+      }
+    }
+    
+    // In development, allow localhost
+    if (!isProduction && origin === 'http://localhost:5173') {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 // Session middleware
 app.use(
   session({
     name: "vi_session",
-    secret: process.env.SESSION_SECRET || "dev-secret-change-me",
+    secret: process.env.SESSION_SECRET || "change_this_secret_later",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === 'production', // secure cookies in production (HTTPS)
       maxAge: 1000 * 60 * 60 * 8, // 8 hours
-      sameSite: process.env.NODE_ENV === "production" ? "lax" : "lax",
+      sameSite: 'lax',
     },
   })
 );
@@ -43,35 +68,29 @@ const AUTH_USER = {
   password: "m5c8!!wi}vx",
 };
 
-// Auth middleware
-function requireAuth(req, res, next) {
-  if (req.session && req.session.user) {
-    return next();
-  }
-  // Log for debugging (remove in production if too verbose)
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Auth check failed:', {
-      hasSession: !!req.session,
-      hasUser: !!(req.session && req.session.user),
-      path: req.path
-    });
-  }
-  return res.status(401).json({ error: "Unauthorized" });
-}
+// Auth middleware - DISABLED (authentication removed)
+// function requireAuth(req, res, next) {
+//   if (req.session && req.session.user) {
+//     return next();
+//   }
+//   return res.status(401).json({ error: "Unauthorized" });
+// }
 
 // Helper to read and parse CSV
 function readCSV(filename) {
+  const filePath = join(__dirname, 'data', filename);
+  console.log(`Reading CSV file: ${filePath}`);
   try {
-    const filePath = join(__dirname, 'data', filename);
     const content = readFileSync(filePath, 'utf-8');
-    return parse(content, {
+    const parsed = parse(content, {
       columns: true,
       skip_empty_lines: true,
       cast: true,
     });
+    console.log(`Successfully parsed ${filename}: ${parsed.length} rows`);
+    return parsed;
   } catch (error) {
-    console.error(`Error reading CSV file ${filename}:`, error.message);
-    console.error(`Looking for file at: ${join(__dirname, 'data', filename)}`);
+    console.error(`Error reading ${filename} from ${filePath}:`, error.message);
     throw error;
   }
 }
@@ -144,7 +163,7 @@ app.get('/api/filters', (req, res) => {
 });
 
 // GET /api/overview
-app.get('/api/overview', requireAuth, (req, res) => {
+app.get('/api/overview', (req, res) => {
   try {
     const filters = req.query;
     const hourlyData = readCSV('overview_hourly.csv');
@@ -218,7 +237,7 @@ app.get('/api/overview', requireAuth, (req, res) => {
 });
 
 // GET /api/journey-policy
-app.get('/api/journey-policy', requireAuth, (req, res) => {
+app.get('/api/journey-policy', (req, res) => {
   try {
     const hourlyData = readCSV('journey_policy_hourly.csv');
     const storeData = readCSV('journey_policy_store.csv');
@@ -266,13 +285,36 @@ app.get('/api/journey-policy', requireAuth, (req, res) => {
 });
 
 // GET /api/sales-upsell
-app.get('/api/sales-upsell', requireAuth, (req, res) => {
+app.get('/api/sales-upsell', (req, res) => {
   try {
     const hourlyData = readCSV('sales_upsell_hourly.csv');
     const storeData = readCSV('sales_upsell_store.csv');
-    const greetingItems = readCSV('sales_upsell_items_greeting.csv');
-    const cartItems = readCSV('sales_upsell_items_cart.csv');
-    const upsizeItems = readCSV('sales_upsell_items_upsize.csv');
+    
+    // Safely read item CSVs with fallback to empty array
+    let greetingItems = [];
+    let cartItems = [];
+    let upsizeItems = [];
+    try {
+      greetingItems = readCSV('sales_upsell_items_greeting.csv');
+      console.log(`Loaded ${greetingItems.length} greeting items`);
+    } catch (e) {
+      console.error('Failed to read sales_upsell_items_greeting.csv:', e.message);
+      console.error('Error stack:', e.stack);
+    }
+    try {
+      cartItems = readCSV('sales_upsell_items_cart.csv');
+      console.log(`Loaded ${cartItems.length} cart items`);
+    } catch (e) {
+      console.error('Failed to read sales_upsell_items_cart.csv:', e.message);
+      console.error('Error stack:', e.stack);
+    }
+    try {
+      upsizeItems = readCSV('sales_upsell_items_upsize.csv');
+      console.log(`Loaded ${upsizeItems.length} upsize items`);
+    } catch (e) {
+      console.error('Failed to read sales_upsell_items_upsize.csv:', e.message);
+      console.error('Error stack:', e.stack);
+    }
     
     const timeSeries = {};
     hourlyData.forEach(row => {
@@ -296,12 +338,63 @@ app.get('/api/sales-upsell', requireAuth, (req, res) => {
       storeValue: parseFloat(row.store_value) || 0,
     }));
     
+    // Aggregate upsell categories for the new tabbed widget
+    const aggregateCategory = (items, id, label) => {
+      // Ensure items is an array
+      if (!Array.isArray(items)) {
+        items = [];
+      }
+      
+      const totalAttempts = items.reduce((sum, item) => sum + (parseInt(item.attempts) || 0), 0);
+      const totalSuccess = items.reduce((sum, item) => sum + (parseInt(item.success) || 0), 0);
+      const successRate = totalAttempts > 0 ? (totalSuccess / totalAttempts) * 100 : 0;
+      
+      return {
+        id,
+        label,
+        summary: {
+          attempts: totalAttempts,
+          success: totalSuccess,
+          successRate: successRate
+        },
+        items: items.map(item => ({
+          item: item.item_name || item.item || 'Unknown',
+          attempts: parseInt(item.attempts) || 0,
+          success: parseInt(item.success) || 0,
+          successRate: (parseInt(item.attempts) || 0) > 0 
+            ? ((parseInt(item.success) || 0) / (parseInt(item.attempts) || 0)) * 100 
+            : 0
+        }))
+      };
+    };
+    
+    // Ensure arrays exist even if CSV files are empty
+    const safeGreetingItems = Array.isArray(greetingItems) ? greetingItems : [];
+    const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+    const safeUpsizeItems = Array.isArray(upsizeItems) ? upsizeItems : [];
+    
+    console.log(`Aggregating categories: greeting=${safeGreetingItems.length}, cart=${safeCartItems.length}, upsize=${safeUpsizeItems.length}`);
+    
+    const upsellCategories = {
+      categories: [
+        aggregateCategory(safeGreetingItems, 'greeting', 'Greeting Upsell'),
+        aggregateCategory(safeCartItems, 'cart', 'Cart Upsell'),
+        aggregateCategory(safeUpsizeItems, 'upsize', 'Upsize')
+      ]
+    };
+    
+    console.log(`Upsell categories created: ${upsellCategories.categories.length} categories`);
+    upsellCategories.categories.forEach(cat => {
+      console.log(`  - ${cat.label}: ${cat.items.length} items, ${cat.summary.attempts} attempts`);
+    });
+    
     res.json({
       kpis: [], // Removed - now in brandFranchiseStoreCompare
       timeSeries,
-      greetingItems,
-      cartItems,
-      upsizeItems,
+      greetingItems: safeGreetingItems, // Keep for backward compatibility if needed
+      cartItems: safeCartItems,
+      upsizeItems: safeUpsizeItems,
+      upsellCategories, // New aggregated format
       storeRows: storeData,
       brandFranchiseStoreCompare
     });
@@ -311,7 +404,7 @@ app.get('/api/sales-upsell', requireAuth, (req, res) => {
 });
 
 // GET /api/friendliness
-app.get('/api/friendliness', requireAuth, (req, res) => {
+app.get('/api/friendliness', (req, res) => {
   try {
     const hourlyData = readCSV('friendliness_hourly.csv');
     const storeData = readCSV('friendliness_store.csv');
@@ -352,7 +445,7 @@ app.get('/api/friendliness', requireAuth, (req, res) => {
 });
 
 // GET /api/alerts
-app.get('/api/alerts', requireAuth, (req, res) => {
+app.get('/api/alerts', (req, res) => {
   try {
     const hourlyData = readCSV('alerts_hourly.csv');
     const callsData = readCSV('alerts_calls.csv');
@@ -410,7 +503,7 @@ app.get('/api/alerts', requireAuth, (req, res) => {
 });
 
 // GET /api/explore
-app.get('/api/explore', requireAuth, (req, res) => {
+app.get('/api/explore', (req, res) => {
   try {
     const { page = 1, pageSize = 50 } = req.query;
     const allData = readCSV('explore_calls.csv');
@@ -429,7 +522,7 @@ app.get('/api/explore', requireAuth, (req, res) => {
 });
 
 // GET /api/compare
-app.get('/api/compare', requireAuth, (req, res) => {
+app.get('/api/compare', (req, res) => {
   try {
     const { metric, segmentA, segmentB, segmentC } = req.query;
     const allData = readCSV('explore_calls.csv');
@@ -484,23 +577,12 @@ app.get('/api/compare', requireAuth, (req, res) => {
   }
 });
 
-// Serve static files from React build in production
-if (process.env.NODE_ENV === "production") {
-  const clientBuildPath = join(__dirname, "client-build");
-  
-  app.use(express.static(clientBuildPath));
-  
-  // For any non-API route, send index.html so React Router works
-  app.get("*", (req, res) => {
-    // Don't serve index.html for API routes
-    if (req.path.startsWith("/api")) {
-      return res.status(404).json({ error: "Not found" });
-    }
-    res.sendFile(join(clientBuildPath, "index.html"));
-  });
-}
+// Health endpoint for monitoring
+app.get('/health', (_req, res) => {
+  res.json({ ok: true });
+});
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
 

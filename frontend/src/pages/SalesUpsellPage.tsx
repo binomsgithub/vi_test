@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { TimeSeriesChart } from '../components/charts/TimeSeriesChart';
 import { StoreTable } from '../components/tables/StoreTable';
-import { ItemTable } from '../components/tables/ItemTable';
 import { MetricSelector } from '../components/compare/MetricSelector';
 import { BubbleTriadGrid } from '../components/compare/BubbleTriadGrid';
 import { NarrativePanel } from '../components/narrative/NarrativePanel';
-import { PageHeader } from '../components/layout/PageHeader';
+import { UpsellCategoryTabs } from '../components/upsell/UpsellCategoryTabs';
 import { getSalesUpsell } from '../api/salesUpsell';
 import { ColumnDef } from '../types/tables';
 import { NarrativeContent } from '../types/narrative';
 import { useFilters } from '../context/FiltersContext';
+import { useCrossFilters } from '../context/CrossFilterContext';
 import { getActiveLevels } from '../utils/levels';
 
 const UPSELL_METRICS = [
@@ -25,21 +25,44 @@ const UPSELL_METRICS = [
 
 export function SalesUpsellPage() {
   const { filters } = useFilters();
+  const { items: crossFilters } = useCrossFilters();
   const { active: activeLevels } = getActiveLevels(filters);
   const [data, setData] = useState<any>(null);
   const [selectedMetric, setSelectedMetric] = useState('overall_upsell_attempt_pct');
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     setLoading(true);
-    getSalesUpsell()
-      .then(setData)
-      .catch(console.error)
+    setError(null);
+    getSalesUpsell(filters, crossFilters)
+      .then((response) => {
+        setData(response);
+        // Check if upsellCategories is missing or empty
+        if (!response.upsellCategories || !response.upsellCategories.categories || response.upsellCategories.categories.length === 0) {
+          console.warn('Upsell categories data is missing or empty');
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load upsell performance:', err);
+        setError(err.message || 'Failed to load data');
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [filters.brand, filters.franchiseId, filters.storeId, filters.owner, filters.channel, filters.engagementMode, filters.callDate, crossFilters]);
 
-  if (loading || !data) {
+  if (loading) {
     return <div className="text-center py-8">Loading...</div>;
+  }
+
+  if (error || !data) {
+    return (
+      <div className="text-center py-8">
+        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-rose-100 text-sm text-rose-600">
+          {error || 'Failed to load upsell performance data'}
+        </div>
+      </div>
+    );
   }
 
   const selectedMetricOption = UPSELL_METRICS.find(m => m.id === selectedMetric);
@@ -153,11 +176,6 @@ export function SalesUpsellPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Sales & Upsell Performance"
-        description="See how well teams drive add-ons, upsizes, and incremental revenue per call."
-      />
-      
       <BubbleTriadGrid metrics={data.brandFranchiseStoreCompare || []} activeLevels={activeLevels} />
 
       <NarrativePanel content={narrative} />
@@ -176,11 +194,13 @@ export function SalesUpsellPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <ItemTable items={data.greetingItems} title="Greeting Upsell" />
-        <ItemTable items={data.cartItems} title="Cart Upsell" />
-        <ItemTable items={data.upsizeItems} title="Upsize" />
-      </div>
+      <UpsellCategoryTabs 
+        data={data.upsellCategories || null}
+        loading={loading}
+        error={error}
+        title="Upsell Attempts by Item"
+        subtitle="Explore greeting, cart, and upsizing performance by upsell item."
+      />
 
       <StoreTable columns={storeColumns} data={data.storeRows} title="Store-Level Upsell Metrics" />
     </div>
